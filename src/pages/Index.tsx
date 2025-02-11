@@ -1,10 +1,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Activity, Users, Star } from "lucide-react";
+import { Activity, Users, Star, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("sports");
+  const navigate = useNavigate();
 
   const services = {
     sports: {
@@ -43,9 +45,17 @@ const Index = () => {
             <p className="text-xl md:text-2xl mb-8 text-foreground/80">
               Sport • Zábava • Performance
             </p>
-            <button className="button-primary">
-              Rezervovat
-            </button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate("/rezervace")}
+              className="px-8 py-4 bg-primary text-white rounded-full font-medium
+                text-lg shadow-lg hover:bg-primary-hover transition-all duration-300
+                flex items-center justify-center gap-2 mx-auto"
+            >
+              <Calendar className="w-5 h-5" />
+              Rezervovat termín
+            </motion.button>
           </motion.div>
         </div>
       </section>
@@ -58,7 +68,8 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="glass-card p-8"
+              className="glass-card p-8 cursor-pointer hover:shadow-xl transition-all duration-300"
+              onClick={() => navigate("/rezervace?type=sport")}
             >
               <Activity className="w-12 h-12 text-primary mb-6" />
               <h3 className="text-2xl font-bold mb-4">Sport</h3>
@@ -71,7 +82,8 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="glass-card p-8"
+              className="glass-card p-8 cursor-pointer hover:shadow-xl transition-all duration-300"
+              onClick={() => navigate("/rezervace?type=zabava")}
             >
               <Users className="w-12 h-12 text-secondary mb-6" />
               <h3 className="text-2xl font-bold mb-4">Zábava</h3>
@@ -84,7 +96,8 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="glass-card p-8"
+              className="glass-card p-8 cursor-pointer hover:shadow-xl transition-all duration-300"
+              onClick={() => navigate("/rezervace?type=performance")}
             >
               <Star className="w-12 h-12 text-accent mb-6" />
               <h3 className="text-2xl font-bold mb-4">Performance</h3>
@@ -146,3 +159,4 @@ const Index = () => {
 };
 
 export default Index;
+
