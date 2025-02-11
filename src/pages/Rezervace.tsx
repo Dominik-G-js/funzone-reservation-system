@@ -88,6 +88,8 @@ const Rezervace = () => {
   const [searchParams] = useSearchParams();
   const initialType = searchParams.get("type") || "sport";
   const { toast } = useToast();
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -96,6 +98,27 @@ const Rezervace = () => {
       notes: "",
     },
   });
+
+  // Simulace dostupnosti termínů - v reálné aplikaci by toto bylo načítáno z backendu
+  const getAvailableTimeSlots = (date: Date) => {
+    // Pro demo účely - některé časy budou "obsazené"
+    const busySlots = new Set([
+      "10:00",
+      "14:00",
+      "16:00",
+    ]);
+
+    return availableTimes.filter(time => !busySlots.has(time));
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    if (date) {
+      const slots = getAvailableTimeSlots(date);
+      setAvailableTimeSlots(slots);
+      form.setValue("date", date);
+    }
+  };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
@@ -165,74 +188,93 @@ const Rezervace = () => {
                   )}
                 />
 
-                {/* Datum */}
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Datum</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP", { locale: cs })
-                              ) : (
-                                <span>Vyberte datum</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date < new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {/* Datum a dostupné termíny */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Datum */}
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Datum</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP", { locale: cs })
+                                ) : (
+                                  <span>Vyberte datum</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={handleDateSelect}
+                              disabled={(date) =>
+                                date < new Date() || date < new Date("1900-01-01")
+                              }
+                              initialFocus
+                              modifiers={{
+                                available: (date) => {
+                                  // Pro demo účely - některé dny budou mít volné termíny
+                                  return date.getDay() !== 0; // Neděle nemá volné termíny
+                                },
+                              }}
+                              modifiersStyles={{
+                                available: {
+                                  fontWeight: "bold",
+                                  textDecoration: "underline",
+                                },
+                              }}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                {/* Čas */}
-                <FormField
-                  control={form.control}
-                  name="time"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Čas</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Vyberte čas" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {availableTimes.map((time) => (
-                            <SelectItem key={time} value={time}>
-                              {time}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  {/* Čas s indikací dostupnosti */}
+                  <FormField
+                    control={form.control}
+                    name="time"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Dostupné časy</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value}
+                          disabled={!selectedDate}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={selectedDate ? "Vyberte čas" : "Nejdřív vyberte datum"} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {availableTimeSlots.map((time) => (
+                              <SelectItem key={time} value={time}>
+                                {time}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 {/* Kontaktní údaje */}
                 <div className="space-y-4">
