@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Activity, Users, Star, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { serviceOptions } from "@/types/reservation";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("sports");
@@ -12,18 +13,31 @@ const Index = () => {
     sports: {
       title: "Sportovní aktivity",
       description: "Kroužky, vedené lekce a více",
-      items: ["Parkour", "Trampolíny", "Akrobacie", "Gymnastika"],
+      items: serviceOptions.sport,
     },
     entertainment: {
       title: "Zábava & Events",
       description: "Volné vstupy a speciální akce",
-      items: ["Volné vstupy", "Narozeninové oslavy", "Teambuilding", "Speciální akce"],
+      items: serviceOptions.zabava,
     },
     performance: {
       title: "Performance",
       description: "Shows, vystoupení a reklama",
-      items: ["Vystoupení", "Shows", "Reklama", "Spolupráce"],
+      items: serviceOptions.performance,
     },
+  };
+
+  const getCategoryId = (section: string) => {
+    switch (section) {
+      case "sports":
+        return "sport";
+      case "entertainment":
+        return "zabava";
+      case "performance":
+        return "performance";
+      default:
+        return "sport";
+    }
   };
 
   return (
@@ -142,12 +156,13 @@ const Index = () => {
               {services[activeSection as keyof typeof services].description}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {services[activeSection as keyof typeof services].items.map((item) => (
+              {services[activeSection as keyof typeof services].items.map((service) => (
                 <div
-                  key={item}
-                  className="p-4 bg-white/50 rounded-lg hover:bg-primary/10 transition-colors"
+                  key={service.id}
+                  onClick={() => navigate(`/sluzby/${getCategoryId(activeSection)}/${service.id}`)}
+                  className="p-4 bg-white/50 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer"
                 >
-                  {item}
+                  {service.name}
                 </div>
               ))}
             </div>
@@ -159,4 +174,3 @@ const Index = () => {
 };
 
 export default Index;
-
