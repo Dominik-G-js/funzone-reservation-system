@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,10 +11,12 @@ import { ServiceSelection } from "@/components/reservation/ServiceSelection";
 import { DateTimeSelection } from "@/components/reservation/DateTimeSelection";
 import { ContactForm } from "@/components/reservation/ContactForm";
 import { availableTimes, formSchema } from "@/types/reservation";
+import { ArrowLeft } from "lucide-react";
 import type { FormSchema } from "@/types/reservation";
 
 const Rezervace = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialType = searchParams.get("type") || "sport";
   const { toast } = useToast();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -65,6 +67,15 @@ const Rezervace = () => {
         className="container mx-auto px-4"
       >
         <div className="max-w-2xl mx-auto">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-6"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Zpět na hlavní stránku
+          </Button>
+
           <h1 className="text-4xl font-bold text-center mb-8">
             Rezervace termínu
           </h1>
