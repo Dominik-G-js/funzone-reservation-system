@@ -2,7 +2,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
+import { Calendar, ArrowLeft } from "lucide-react";
 import { serviceOptions } from "@/types/reservation";
 
 const SluzbaDetail = () => {
@@ -43,6 +43,15 @@ const SluzbaDetail = () => {
         className="container mx-auto px-4"
       >
         <div className="max-w-4xl mx-auto">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-6"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Zpět na hlavní stránku
+          </Button>
+
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-4xl font-bold">{service.name}</h1>
             <Button onClick={() => navigate('/rezervace')} className="flex items-center gap-2">
