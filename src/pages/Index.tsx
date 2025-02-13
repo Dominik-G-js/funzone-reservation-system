@@ -3,9 +3,11 @@ import { motion } from "framer-motion";
 import { Activity, Users, Star, Calendar, Phone, Mail, MapPin, Facebook, Instagram, Youtube } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { serviceOptions } from "@/types/reservation";
+
 const Index = () => {
   const [activeSection, setActiveSection] = useState("sports");
   const navigate = useNavigate();
+
   const services = {
     sports: {
       title: "Sportovní aktivity",
@@ -23,6 +25,7 @@ const Index = () => {
       items: serviceOptions.performance
     }
   };
+
   const getCategoryId = (section: string) => {
     switch (section) {
       case "sports":
@@ -35,9 +38,9 @@ const Index = () => {
         return "sport";
     }
   };
+
   return <div className="min-h-screen flex flex-col">
       <div className="flex-grow">
-        {/* Hero Section */}
         <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 backdrop-blur-sm" />
           <div className="container mx-auto px-4 relative z-10">
@@ -71,7 +74,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Services Section */}
         <section className="py-20 bg-muted">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -128,7 +130,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Interactive Services Section */}
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="flex justify-center gap-4 mb-12">
@@ -162,7 +163,6 @@ const Index = () => {
         </section>
       </div>
 
-      {/* Footer */}
       <footer className="bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-background via-muted to-muted mt-20">
         <div className="container mx-auto px-4 py-12 bg-slate-950 hover:bg-slate-800">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -245,4 +245,5 @@ const Index = () => {
       </footer>
     </div>;
 };
+
 export default Index;
