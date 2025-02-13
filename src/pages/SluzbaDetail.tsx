@@ -2,7 +2,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Calendar, ArrowLeft } from "lucide-react";
+import { Calendar, ArrowLeft, Sparkles, Users, Star } from "lucide-react";
 import { serviceOptions } from "@/types/reservation";
 
 const SluzbaDetail = () => {
@@ -36,58 +36,90 @@ const SluzbaDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted py-12">
+    <div className="min-h-screen bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-muted">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="container mx-auto px-4"
+        className="container mx-auto px-4 py-12"
       >
         <div className="max-w-4xl mx-auto">
           <Button
             variant="ghost"
             onClick={() => navigate("/")}
-            className="mb-6"
+            className="mb-6 hover:bg-white/20 transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Zpět na hlavní stránku
           </Button>
 
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-4xl font-bold">{service.name}</h1>
-            <Button onClick={() => navigate('/rezervace')} className="flex items-center gap-2">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center justify-between mb-8 glass-card p-6 rounded-2xl"
+          >
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                {service.name}
+              </h1>
+              <p className="text-muted-foreground mt-2">Objevte svůj potenciál s námi</p>
+            </div>
+            <Button 
+              onClick={() => navigate('/rezervace')} 
+              className="flex items-center gap-2 bg-primary hover:bg-primary/90 transition-colors"
+            >
               <Calendar className="h-4 w-4" />
               Rezervovat termín
             </Button>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="glass-card p-6">
-              <h2 className="text-2xl font-semibold mb-4">O službě</h2>
-              <p className="text-lg text-muted-foreground">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="glass-card p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <Sparkles className="h-6 w-6 text-primary" />
+                <h2 className="text-2xl font-semibold">O službě</h2>
+              </div>
+              <p className="text-lg text-muted-foreground leading-relaxed">
                 {getServiceDescription(service.id)}
               </p>
-            </div>
+            </motion.div>
 
-            <div className="glass-card p-6">
-              <h2 className="text-2xl font-semibold mb-4">Dostupné termíny</h2>
-              <div className="space-y-4">
-                <div className="p-4 bg-primary/10 rounded-lg">
-                  <h3 className="font-semibold">Tento týden</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Pondělí - Pátek: 9:00 - 18:00<br />
-                    Sobota: 10:00 - 16:00<br />
-                    Neděle: Zavřeno
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+              className="glass-card p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <Star className="h-6 w-6 text-secondary" />
+                <h2 className="text-2xl font-semibold">Dostupné termíny</h2>
+              </div>
+              <div className="space-y-6">
+                <div className="p-6 bg-white/10 backdrop-blur-sm rounded-xl">
+                  <h3 className="font-semibold flex items-center gap-2 mb-3">
+                    <Users className="h-5 w-5 text-accent" />
+                    Tento týden
+                  </h3>
+                  <p className="text-sm text-muted-foreground space-y-2">
+                    <span className="block">Pondělí - Pátek: 9:00 - 18:00</span>
+                    <span className="block">Sobota: 10:00 - 16:00</span>
+                    <span className="block">Neděle: Zavřeno</span>
                   </p>
                 </div>
                 
                 <Button 
-                  className="w-full" 
+                  className="w-full bg-secondary hover:bg-secondary/90 transition-colors" 
                   onClick={() => navigate(`/rezervace?type=${categoryId}&service=${serviceId}`)}
                 >
                   Zobrazit všechny termíny
                 </Button>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </motion.div>
