@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Rezervace from "./pages/Rezervace";
 import SluzbaDetail from "./pages/SluzbaDetail";
+import SluzbyKategorie from "./pages/SluzbyKategorie";
 import NotFound from "./pages/NotFound";
 import Cenik from "./pages/Cenik";
 import ONas from "./pages/ONas";
@@ -23,6 +24,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/rezervace" element={<Rezervace />} />
+          <Route path="/sluzby/:categoryId" element={<SluzbyKategorie />} />
           <Route path="/sluzby/:categoryId/:serviceId" element={<SluzbaDetail />} />
           <Route path="/cenik" element={<Cenik />} />
           <Route path="/o-nas" element={<ONas />} />
