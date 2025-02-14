@@ -8,6 +8,9 @@ import Index from "./pages/Index";
 import Rezervace from "./pages/Rezervace";
 import SluzbaDetail from "./pages/SluzbaDetail";
 import NotFound from "./pages/NotFound";
+import Cenik from "./pages/Cenik";
+import ONas from "./pages/ONas";
+import Kontakt from "./pages/Kontakt";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +24,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/rezervace" element={<Rezervace />} />
           <Route path="/sluzby/:categoryId/:serviceId" element={<SluzbaDetail />} />
+          <Route path="/cenik" element={<Cenik />} />
+          <Route path="/o-nas" element={<ONas />} />
+          <Route path="/kontakt" element={<Kontakt />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
