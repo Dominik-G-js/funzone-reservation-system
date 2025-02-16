@@ -32,9 +32,11 @@ export const Navbar = () => {
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <div className="w-10 h-10 bg-gradient-to-r from-primary via-secondary to-accent rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">UM</span>
-            </div>
+            <img 
+              src="/lovable-uploads/eee7bac0-5f98-4d98-a7c6-7e93c963fcd3.png" 
+              alt="Logo" 
+              className="h-10 w-10"
+            />
             <span className="text-xl font-bold">Parkour</span>
           </motion.div>
 
