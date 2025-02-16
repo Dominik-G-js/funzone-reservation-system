@@ -29,15 +29,14 @@ export const Navbar = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-4 cursor-pointer"
             onClick={() => navigate("/")}
           >
             <img 
-              src="/lovable-uploads/eee7bac0-5f98-4d98-a7c6-7e93c963fcd3.png" 
-              alt="Logo" 
-              className="h-10 w-10"
+              src="/lovable-uploads/291b9420-c9e5-4a57-be8f-30b5c7675764.png" 
+              alt="UM PARK Logo" 
+              className="h-12"
             />
-            <span className="text-xl font-bold">Parkour</span>
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -46,24 +45,24 @@ export const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             className="hidden md:flex items-center gap-8"
           >
-            <button onClick={() => navigate("/")} className="nav-link">
+            <button onClick={() => navigate("/")} className="nav-link font-sans">
               Domů
             </button>
-            <button onClick={() => navigate("/sluzby/sport")} className="nav-link">
+            <button onClick={() => navigate("/sluzby/sport")} className="nav-link font-sans">
               Služby
             </button>
-            <button onClick={() => navigate("/cenik")} className="nav-link">
+            <button onClick={() => navigate("/cenik")} className="nav-link font-sans">
               Ceník
             </button>
-            <button onClick={() => navigate("/o-nas")} className="nav-link">
+            <button onClick={() => navigate("/o-nas")} className="nav-link font-sans">
               O nás
             </button>
-            <button onClick={() => navigate("/kontakt")} className="nav-link">
+            <button onClick={() => navigate("/kontakt")} className="nav-link font-sans">
               Kontakt
             </button>
             <button
               onClick={() => navigate("/rezervace")}
-              className="button-primary"
+              className="button-primary font-sans"
             >
               Rezervovat
             </button>
@@ -96,7 +95,7 @@ export const Navbar = () => {
                 navigate("/");
                 setIsMobileMenuOpen(false);
               }}
-              className="nav-link text-left"
+              className="nav-link text-left font-sans"
             >
               Domů
             </button>
@@ -105,7 +104,7 @@ export const Navbar = () => {
                 navigate("/sluzby/sport");
                 setIsMobileMenuOpen(false);
               }}
-              className="nav-link text-left"
+              className="nav-link text-left font-sans"
             >
               Služby
             </button>
@@ -114,7 +113,7 @@ export const Navbar = () => {
                 navigate("/cenik");
                 setIsMobileMenuOpen(false);
               }}
-              className="nav-link text-left"
+              className="nav-link text-left font-sans"
             >
               Ceník
             </button>
@@ -123,7 +122,7 @@ export const Navbar = () => {
                 navigate("/o-nas");
                 setIsMobileMenuOpen(false);
               }}
-              className="nav-link text-left"
+              className="nav-link text-left font-sans"
             >
               O nás
             </button>
@@ -132,7 +131,7 @@ export const Navbar = () => {
                 navigate("/kontakt");
                 setIsMobileMenuOpen(false);
               }}
-              className="nav-link text-left"
+              className="nav-link text-left font-sans"
             >
               Kontakt
             </button>
@@ -141,7 +140,7 @@ export const Navbar = () => {
                 navigate("/rezervace");
                 setIsMobileMenuOpen(false);
               }}
-              className="button-primary w-full"
+              className="button-primary w-full font-sans"
             >
               Rezervovat
             </button>

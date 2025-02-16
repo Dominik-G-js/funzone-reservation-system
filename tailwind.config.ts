@@ -26,17 +26,21 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#40E0D0",
-          hover: "#2CCAC0",
+          DEFAULT: "#8620FF",
+          hover: "#7010EF",
         },
         secondary: {
-          DEFAULT: "#8B5CF6",
-          hover: "#7C3AED",
+          DEFAULT: "#F0415C",
+          hover: "#E02040",
         },
         accent: {
-          DEFAULT: "#EC4899",
-          hover: "#DB2777",
+          DEFAULT: "#EED202",
+          hover: "#DCB001",
         },
+      },
+      fontFamily: {
+        'sans': ['Plus Jakarta Sans', 'sans-serif'],
+        'heading': ['Area Normal', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -52,20 +56,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "fade-in": {
-          "0%": { opacity: "0", transform: "translateY(10px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        "fade-out": {
-          "0%": { opacity: "1", transform: "translateY(0)" },
-          "100%": { opacity: "0", transform: "translateY(10px)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.3s ease-out",
-        "fade-out": "fade-out 0.3s ease-out",
       },
     },
   },
