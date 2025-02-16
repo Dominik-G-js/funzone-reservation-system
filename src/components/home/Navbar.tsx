@@ -33,7 +33,7 @@ export const Navbar = () => {
             onClick={() => navigate("/")}
           >
             <img 
-              src="/lovable-uploads/291b9420-c9e5-4a57-be8f-30b5c7675764.png" 
+              src="/lovable-uploads/bfbea331-45d9-48db-81a7-4a5c89636fae.png" 
               alt="UM PARK Logo" 
               className="h-12"
             />
