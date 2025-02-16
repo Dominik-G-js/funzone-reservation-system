@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings, Users, Calendar, FileText, Image, PriceTag } from "lucide-react";
+import { Settings, Users, Calendar, FileText, Image, Receipt } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +13,7 @@ const Admin = () => {
     { id: "obsah", name: "Správa obsahu", icon: FileText },
     { id: "galerie", name: "Galerie", icon: Image },
     { id: "sluzby", name: "Služby", icon: Settings },
-    { id: "cenik", name: "Ceník", icon: PriceTag },
+    { id: "cenik", name: "Ceník", icon: Receipt },
     { id: "rezervace", name: "Rezervace", icon: Calendar },
     { id: "uzivatele", name: "Uživatelé", icon: Users },
   ];
