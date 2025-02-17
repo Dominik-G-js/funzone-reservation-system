@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Settings, Users, Calendar, FileText, Image, Receipt } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ContentSection } from "@/components/admin/ContentSection";
+import { GallerySection } from "@/components/admin/GallerySection";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -17,6 +19,21 @@ const Admin = () => {
     { id: "rezervace", name: "Rezervace", icon: Calendar },
     { id: "uzivatele", name: "Uživatelé", icon: Users },
   ];
+
+  const renderContent = () => {
+    switch (selectedSection) {
+      case "obsah":
+        return <ContentSection />;
+      case "galerie":
+        return <GallerySection />;
+      default:
+        return (
+          <p className="text-muted-foreground">
+            Sekce {sections.find((s) => s.id === selectedSection)?.name.toLowerCase()} je připravena k implementaci.
+          </p>
+        );
+    }
+  };
 
   return (
     <main className="min-h-screen bg-background p-4">
@@ -76,9 +93,7 @@ const Admin = () => {
             <h2 className="text-2xl font-semibold mb-6">
               {sections.find((s) => s.id === selectedSection)?.name}
             </h2>
-            <p className="text-muted-foreground">
-              Sekce {sections.find((s) => s.id === selectedSection)?.name.toLowerCase()} je připravena k implementaci.
-            </p>
+            {renderContent()}
           </motion.div>
         </div>
       </div>
