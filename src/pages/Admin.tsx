@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ContentSection } from "@/components/admin/ContentSection";
 import { GallerySection } from "@/components/admin/GallerySection";
+import { ServicesSection } from "@/components/admin/ServicesSection";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ const Admin = () => {
         return <ContentSection />;
       case "galerie":
         return <GallerySection />;
+      case "sluzby":
+        return <ServicesSection />;
       default:
         return (
           <p className="text-muted-foreground">
