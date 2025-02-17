@@ -1,12 +1,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings, Users, Calendar, FileText, Image, Receipt } from "lucide-react";
+import { Settings, Users, Calendar, FileText, Image, Receipt, Layout } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ContentSection } from "@/components/admin/ContentSection";
 import { GallerySection } from "@/components/admin/GallerySection";
 import { ServicesSection } from "@/components/admin/ServicesSection";
+import { LayoutSection } from "@/components/admin/LayoutSection";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Admin = () => {
     { id: "cenik", name: "Ceník", icon: Receipt },
     { id: "rezervace", name: "Rezervace", icon: Calendar },
     { id: "uzivatele", name: "Uživatelé", icon: Users },
+    { id: "layout", name: "Hlavička & Patička", icon: Layout },
   ];
 
   const renderContent = () => {
@@ -29,6 +31,8 @@ const Admin = () => {
         return <GallerySection />;
       case "sluzby":
         return <ServicesSection />;
+      case "layout":
+        return <LayoutSection />;
       default:
         return (
           <p className="text-muted-foreground">
