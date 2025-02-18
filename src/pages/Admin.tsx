@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Settings, Users, Calendar, FileText, Image, Receipt, Layout } from "lucide-react";
@@ -8,6 +7,7 @@ import { ContentSection } from "@/components/admin/ContentSection";
 import { GallerySection } from "@/components/admin/GallerySection";
 import { ServicesSection } from "@/components/admin/ServicesSection";
 import { LayoutSection } from "@/components/admin/LayoutSection";
+import { PricingSection } from "@/components/admin/PricingSection";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -33,6 +33,8 @@ const Admin = () => {
         return <ServicesSection />;
       case "layout":
         return <LayoutSection />;
+      case "cenik":
+        return <PricingSection />;
       default:
         return (
           <p className="text-muted-foreground">
