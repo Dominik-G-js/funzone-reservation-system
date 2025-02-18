@@ -10,6 +10,7 @@ import { ServicesSection } from "@/components/admin/ServicesSection";
 import { LayoutSection } from "@/components/admin/LayoutSection";
 import { PricingSection } from "@/components/admin/PricingSection";
 import { ReservationsSection } from "@/components/admin/ReservationsSection";
+import { UsersSection } from "@/components/admin/UsersSection";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -39,6 +40,8 @@ const Admin = () => {
         return <PricingSection />;
       case "rezervace":
         return <ReservationsSection />;
+      case "uzivatele":
+        return <UsersSection />;
       default:
         return (
           <p className="text-muted-foreground">
