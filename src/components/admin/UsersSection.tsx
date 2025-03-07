@@ -6,6 +6,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
 import { Plus, Trash2, UserCog, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface User {
   id: string;
@@ -241,14 +248,18 @@ export const UsersSection = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Label>Role:</Label>
-                  <select
-                    className="px-2 py-1 rounded-md border bg-background"
-                    value={user.role}
-                    onChange={(e) => handleUpdateUser(user.id, "role", e.target.value)}
+                  <Select 
+                    value={user.role} 
+                    onValueChange={(value) => handleUpdateUser(user.id, "role", value)}
                   >
-                    <option value="user">Uživatel</option>
-                    <option value="admin">Administrátor</option>
-                  </select>
+                    <SelectTrigger className="w-32">
+                      <SelectValue placeholder="Role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">Uživatel</SelectItem>
+                      <SelectItem value="admin">Administrátor</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="flex items-center gap-2">
                   <Label>Vytvořen:</Label>
