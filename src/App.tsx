@@ -13,6 +13,7 @@ import Cenik from "./pages/Cenik";
 import ONas from "./pages/ONas";
 import Kontakt from "./pages/Kontakt";
 import Admin from "./pages/Admin";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/o-nas" element={<ONas />} />
           <Route path="/kontakt" element={<Kontakt />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

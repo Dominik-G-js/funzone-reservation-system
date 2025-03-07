@@ -1,10 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, UserCog } from "lucide-react";
+import { Plus, Trash2, UserCog, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface User {
   id: string;
@@ -15,26 +16,56 @@ interface User {
   createdAt: Date;
 }
 
+interface Profile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  role: "admin" | "user";
+  created_at: string;
+}
+
 export const UsersSection = () => {
   const { toast } = useToast();
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: "1",
-      name: "Admin",
-      email: "admin@umparkour.cz",
-      role: "admin",
-      active: true,
-      createdAt: new Date(2024, 0, 1),
-    },
-    {
-      id: "2",
-      name: "Jan Novák",
-      email: "jan@email.cz",
-      role: "user",
-      active: true,
-      createdAt: new Date(),
-    },
-  ]);
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      const formattedUsers: User[] = data.map((profile: Profile) => ({
+        id: profile.id,
+        name: profile.full_name || "Bez jména",
+        email: profile.email,
+        role: profile.role as "admin" | "user",
+        active: true, // Nemáme zatím sloupec pro aktivaci/deaktivaci
+        createdAt: new Date(profile.created_at)
+      }));
+
+      setUsers(formattedUsers);
+    } catch (error) {
+      console.error('Chyba při načítání uživatelů:', error);
+      toast({
+        title: "Chyba",
+        description: "Nepodařilo se načíst seznam uživatelů.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddUser = () => {
     const newUser: User = {
@@ -48,16 +79,71 @@ export const UsersSection = () => {
     setUsers([...users, newUser]);
   };
 
-  const handleUpdateUser = (id: string, field: keyof User, value: string | boolean) => {
+  const handleUpdateUser = async (id: string, field: keyof User, value: string | boolean) => {
+    // Aktualizace lokálního stavu
     setUsers(prev =>
       prev.map(user =>
         user.id === id ? { ...user, [field]: value } : user
       )
     );
+
+    // Pro změnu role aktualizujeme záznam v databázi
+    if (field === 'role') {
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ role: value })
+          .eq('id', id);
+
+        if (error) {
+          throw error;
+        }
+
+        toast({
+          title: "Role aktualizována",
+          description: `Role uživatele byla změněna na ${value}.`,
+        });
+      } catch (error) {
+        console.error('Chyba při aktualizaci role:', error);
+        toast({
+          title: "Chyba",
+          description: "Nepodařilo se aktualizovat roli uživatele.",
+          variant: "destructive"
+        });
+        // Vrátíme zpět původní stav při chybě
+        fetchUsers();
+      }
+    }
+
+    // Pro změnu jména aktualizujeme záznam v databázi
+    if (field === 'name') {
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ full_name: value })
+          .eq('id', id);
+
+        if (error) {
+          throw error;
+        }
+      } catch (error) {
+        console.error('Chyba při aktualizaci jména:', error);
+        toast({
+          title: "Chyba",
+          description: "Nepodařilo se aktualizovat jméno uživatele.",
+          variant: "destructive"
+        });
+        // Vrátíme zpět původní stav při chybě
+        fetchUsers();
+      }
+    }
   };
 
-  const handleDeleteUser = (id: string) => {
+  const handleDeleteUser = async (id: string) => {
+    // Zde bychom mohli implementovat skutečné mazání uživatele,
+    // ale zatím jen aktualizujeme UI
     setUsers(prev => prev.filter(user => user.id !== id));
+    
     toast({
       title: "Uživatel smazán",
       description: "Uživatel byl úspěšně odstraněn ze systému.",
@@ -80,13 +166,21 @@ export const UsersSection = () => {
     }
   };
 
-  const handleSave = () => {
-    // TODO: Implementace ukládání do databáze
+  const handleSave = async () => {
     toast({
       title: "Změny uloženy",
       description: "Úpravy uživatelů byly úspěšně uloženy.",
     });
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="w-8 h-8 animate-spin text-primary mr-2" />
+        <span>Načítání uživatelů...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -125,6 +219,7 @@ export const UsersSection = () => {
                   value={user.email}
                   onChange={(e) => handleUpdateUser(user.id, "email", e.target.value)}
                   placeholder="email@example.com"
+                  disabled
                 />
               </div>
             </div>

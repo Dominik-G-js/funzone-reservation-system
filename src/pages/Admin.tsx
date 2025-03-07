@@ -1,7 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Settings, Users, Calendar, FileText, Image, Receipt, Layout } from "lucide-react";
+import { Settings, Users, Calendar, FileText, Image, Receipt, Layout, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ContentSection } from "@/components/admin/ContentSection";
@@ -11,10 +11,86 @@ import { LayoutSection } from "@/components/admin/LayoutSection";
 import { PricingSection } from "@/components/admin/PricingSection";
 import { ReservationsSection } from "@/components/admin/ReservationsSection";
 import { UsersSection } from "@/components/admin/UsersSection";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 const Admin = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedSection, setSelectedSection] = useState("obsah");
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      setLoading(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+          navigate("/login");
+          return;
+        }
+        
+        setUser(session.user);
+        
+        // Kontrola, zda je uživatel admin
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (error) {
+          console.error('Chyba při načítání profilu:', error);
+          toast({
+            title: "Chyba",
+            description: "Nepodařilo se ověřit vaše oprávnění.",
+            variant: "destructive"
+          });
+          return;
+        }
+        
+        if (profile?.role !== 'admin') {
+          toast({
+            title: "Přístup zamítnut",
+            description: "Nemáte oprávnění pro přístup do administrace.",
+            variant: "destructive"
+          });
+          navigate("/");
+          return;
+        }
+        
+        setIsAdmin(true);
+      } catch (error) {
+        console.error('Chyba ověření uživatele:', error);
+        toast({
+          title: "Chyba",
+          description: "Nepodařilo se ověřit vaši identitu.",
+          variant: "destructive"
+        });
+        navigate("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    checkSession();
+    
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_OUT') {
+          navigate("/login");
+        }
+      }
+    );
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [navigate, toast]);
 
   const sections = [
     { id: "obsah", name: "Správa obsahu", icon: FileText },
@@ -25,6 +101,24 @@ const Admin = () => {
     { id: "uzivatele", name: "Uživatelé", icon: Users },
     { id: "layout", name: "Hlavička & Patička", icon: Layout },
   ];
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Odhlášení úspěšné",
+        description: "Byli jste úspěšně odhlášeni.",
+      });
+      navigate("/login");
+    } catch (error) {
+      console.error('Chyba při odhlášení:', error);
+      toast({
+        title: "Chyba",
+        description: "Nepodařilo se odhlásit.",
+        variant: "destructive"
+      });
+    }
+  };
 
   const renderContent = () => {
     switch (selectedSection) {
@@ -51,6 +145,19 @@ const Admin = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Ověřuji přihlášení...</span>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return null; // Bude přesměrováno v useEffect
+  }
+
   return (
     <main className="min-h-screen bg-background p-4">
       {/* Header */}
@@ -65,12 +172,24 @@ const Admin = () => {
               />
               <h1 className="text-lg font-semibold">Administrace</h1>
             </div>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate("/")}
-            >
-              Zpět na web
-            </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground mr-2">
+                {user?.email}
+              </span>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate("/")}
+              >
+                Zpět na web
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={handleSignOut}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Odhlásit
+              </Button>
+            </div>
           </div>
         </div>
       </header>
