@@ -9,7 +9,9 @@ import {
   fetchUsers, 
   createNewUser, 
   updateUserRole, 
-  updateUserName 
+  updateUserName,
+  deleteUser,
+  toggleUserStatus
 } from "./users/userOperations";
 
 export const UsersSection = () => {
@@ -74,29 +76,33 @@ export const UsersSection = () => {
   };
 
   const handleDeleteUser = async (id: string) => {
-    // Zde bychom mohli implementovat skutečné mazání uživatele,
-    // ale zatím jen aktualizujeme UI
-    setUsers(prev => prev.filter(user => user.id !== id));
+    // Try to delete the user from the database
+    const success = await deleteUser(id);
     
-    toast({
-      title: "Uživatel smazán",
-      description: "Uživatel byl úspěšně odstraněn ze systému.",
-    });
+    if (success) {
+      // Update UI only if the database operation was successful
+      setUsers(prev => prev.filter(user => user.id !== id));
+    } else {
+      // Reload users to ensure UI is in sync with database
+      await loadUsers();
+    }
   };
 
-  const handleToggleStatus = (id: string) => {
-    setUsers(prev =>
-      prev.map(user =>
-        user.id === id ? { ...user, active: !user.active } : user
-      )
-    );
-
+  const handleToggleStatus = async (id: string) => {
     const user = users.find(u => u.id === id);
-    if (user) {
-      toast({
-        title: "Status změněn",
-        description: `Účet uživatele byl ${user.active ? 'deaktivován' : 'aktivován'}.`,
-      });
+    if (!user) return;
+    
+    const success = await toggleUserStatus(id, user.active);
+    
+    if (success) {
+      setUsers(prev =>
+        prev.map(user =>
+          user.id === id ? { ...user, active: !user.active } : user
+        )
+      );
+    } else {
+      // Reload users to ensure UI is in sync with database
+      await loadUsers();
     }
   };
 
