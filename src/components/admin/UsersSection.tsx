@@ -82,9 +82,22 @@ export const UsersSection = () => {
   const handleUpdateUser = async (id: string, field: keyof User, value: string | boolean) => {
     // Aktualizace lokálního stavu
     setUsers(prev =>
-      prev.map(user =>
-        user.id === id ? { ...user, [field]: value } : user
-      )
+      prev.map(user => {
+        if (user.id === id) {
+          // Handle the different types based on the field
+          if (field === 'role') {
+            // Ensure role is only 'admin' or 'user'
+            return { ...user, [field]: value as "admin" | "user" };
+          } else if (field === 'active') {
+            // For active field, we expect a boolean
+            return { ...user, [field]: Boolean(value) };
+          } else {
+            // For other string fields
+            return { ...user, [field]: String(value) };
+          }
+        }
+        return user;
+      })
     );
 
     // Pro změnu role aktualizujeme záznam v databázi
@@ -92,7 +105,7 @@ export const UsersSection = () => {
       try {
         const { error } = await supabase
           .from('profiles')
-          .update({ role: value })
+          .update({ role: value as "admin" | "user" })
           .eq('id', id);
 
         if (error) {
@@ -120,7 +133,7 @@ export const UsersSection = () => {
       try {
         const { error } = await supabase
           .from('profiles')
-          .update({ full_name: value })
+          .update({ full_name: String(value) })
           .eq('id', id);
 
         if (error) {
@@ -231,7 +244,7 @@ export const UsersSection = () => {
                   <select
                     className="px-2 py-1 rounded-md border bg-background"
                     value={user.role}
-                    onChange={(e) => handleUpdateUser(user.id, "role", e.target.value as "admin" | "user")}
+                    onChange={(e) => handleUpdateUser(user.id, "role", e.target.value)}
                   >
                     <option value="user">Uživatel</option>
                     <option value="admin">Administrátor</option>
